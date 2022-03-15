@@ -41,12 +41,38 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
+      <?php if(isset($_SESSION['role'])==false){?>
+      <li class="nav-item ">
         <a class="nav-link" href="login.php">LOGIN <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="register.php">REGISTER</a>
       </li>
+      <?php } else if($_SESSION['role']=='admin'){ ?>
+        <li class="nav-item ">
+        <a class="nav-link" href="edituser.php">Edit User<span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="editblog.php">Edit Blog</a>
+      </li>
+      <li class="nav-item float-right">
+      <a class="nav-link" href="logout.php">LOGOUT <span class="sr-only">(current)</span></a>
+      </li>
+      <?php } else if($_SESSION['role']=='author'){ ?>
+        <li class="nav-item ">
+        <a class="nav-link" href="createpost.php">Create POST <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="updatepost.php">Update POST</a>
+      </li>
+      <li class="nav-item float-right">
+      <a class="nav-link" href="logout.php">LOGOUT <span class="sr-only">(current)</span></a>
+      </li>
+      <?php }else if ($_SESSION['role']){ ?>
+      <li class="nav-item float-right">
+      <a class="nav-link" href="logout.php">LOGOUT <span class="sr-only">(current)</span></a>
+      </li>
+      <?php } ?>
     </ul>
   </div>
 </nav>
@@ -58,14 +84,15 @@
                 $timestamp = strtotime($data['time']); 
                 echo "<div><p>".date('d-m-Y',$timestamp)."</p></div>";             
         }
-     ?>
-     
+        if(isset($_SESSION['role'])==true){
+     ?>     
     <form method="post" action="posts.php">
      <textarea type="text" width="150px" height="100px" name="comment"></textarea><br/>
      <input type="email" name="email"><br/>
      <input type="submit" value="comment" name="submit">
     </form>
     <?php
+        }
      if(isset($result1)){
         if(mysqli_num_rows($result1)>0){
             while($data1 = mysqli_fetch_assoc($result1)){

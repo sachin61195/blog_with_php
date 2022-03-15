@@ -1,5 +1,19 @@
 <?php
-    // if(isset($_POST[]))
+    include 'connect.php';
+    if(isset($_POST['submit'])){
+      $email = $_POST['email'];
+      $role = $_POST['role'];
+      $pass = $_POST['password'];
+      $sql = "INSERT INTO Role Values(0,'$role','$email','$pass')";
+      if(mysqli_query($conn,$sql)){
+        session_start();
+        $_SESSION['email']=$email;
+        $_SESSION['role']=$role;
+        header("Location:index.php");
+      }else{
+        echo "REGISTRATION FAILED";
+      }
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,7 +38,7 @@
             <div class="col-md-12 col-lg-12 d-flex align-items-center">
               <div class="card-body p-4 p-lg-5 text-black">
 
-                <form>
+                <form action="register.php" method="POST">
 
                   <div class="d-flex align-items-center mb-3 pb-1">
                     <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
@@ -37,7 +51,7 @@
                   </div>
 
                   <div class="form-outline mb-4">
-                    <select class="form-select" name="role" aria-label="Default select example">
+                    <select class="form-control form-control-lg" name="role" aria-label="Default select example">
                         <option selected>Select Role</option>
                         <option value="author">Author</option>
                         <option value="user">User</option>

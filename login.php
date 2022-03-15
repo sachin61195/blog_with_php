@@ -1,3 +1,21 @@
+<?php
+  include 'connect.php';
+  if(isset($_POST['submit'])){
+    $email = $_POST['email'];
+    $pass = $_POST['password'];
+    $sql = "SELECT * from Role where email='$email' and password='$pass'";
+    if(mysqli_query($conn,$sql)){
+      session_start();
+      $data = mysqli_fetch_assoc(mysqli_query($conn,$sql));
+      $_SESSION['email']=$email;
+      $_SESSION['role']=$data['role'];
+      header('location:index.php');
+    }else{
+      echo "LOGIN ERROR";
+      die();
+    }
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +39,7 @@
             <div class="col-md-12 col-lg-12 d-flex align-items-center">
               <div class="card-body p-4 p-lg-5 text-black">
 
-                <form>
+                <form action="login.php" method="POST">
 
                   <div class="d-flex align-items-center mb-3 pb-1">
                     <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
@@ -29,17 +47,17 @@
                   </div>
 
                   <div class="form-outline mb-4">
-                    <input type="email" id="form2Example17" class="form-control form-control-lg" />
+                    <input type="email" id="form2Example17" name="email" class="form-control form-control-lg" />
                     <label class="form-label" for="form2Example17">Email address</label>
                   </div>
 
                   <div class="form-outline mb-4">
-                    <input type="password" id="form2Example27" class="form-control form-control-lg" />
+                    <input type="password" id="form2Example27" name="password" class="form-control form-control-lg" />
                     <label class="form-label" for="form2Example27">Password</label>
                   </div>
 
                   <div class="pt-1 mb-4">
-                    <button class="btn btn-dark btn-lg btn-block" type="button">Login</button>
+                    <button class="btn btn-dark btn-lg btn-block" name="submit">Login</button>
                   </div>
 
                   <a class="small text-muted" href="#!">Forgot password?</a>

@@ -1,8 +1,9 @@
 <?php
     session_start();
     include 'connect.php';
-    $sql = "SELECT * FROM posts";
+    $sql = "SELECT * FROM Role where role!='admin'";
     $result = mysqli_query($conn,$sql);
+    if(isset($_SESSION['role'])=='admin'){ 
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,6 +16,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -61,17 +63,34 @@
     </ul>
   </div>
 </nav>
+    <table border=1>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Permission</th>
     <?php
         if(mysqli_num_rows($result)>0){
             while($data = mysqli_fetch_assoc($result)){
-                echo "<div><a href='posts.php?id={$data['id']}'>{$data['title']}</a></div>";
-                $description = substr($data['description'],0,110);
-                echo "<div><p>{$description}</p></div>";   
-                $timestamp = strtotime($data['time']); 
-                echo "<div><p>".date('d-m-Y',$timestamp)."</p></div>";            
+                echo "<tr>";
+                $r = $data['role'];
+                $rol = "'$r'";
+                echo "<td>{$data['email']}</td>";
+                echo "<td >{$data['role']}</td>";
+                echo "<td><select id='{$data['id']}' name='permission' onclick=myfun({$data['id']})>";
+                echo "<option value='user'>User</option>";
+                echo "<option value='author'>Author</option>";
+                echo "</select>";
+                echo "</td>"; 
+                echo "</tr>";           
             }
         }
      ?>
+     </table>
     </div>
+    <script src="index.js"></script>
 </body>
 </html>
+<?php } 
+  else {
+    header('Location: index.php');
+  }
+?>
